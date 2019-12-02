@@ -17,17 +17,29 @@ func main() {
 	// read the mass values from file
 	masses := readMassValuesFromFile(inputPath)
 
-	// calculateFuelRequirement
 	var totalFuelRequirement int
+	var moduleFuelRequirement int
 	for _, i := range masses {
-		totalFuelRequirement += calculateFuelRequirement(i)
+		totalFuelRequirement += totalFuel(i)
+		moduleFuelRequirement += massToFuel(i)
 	}
 
-	fmt.Println(totalFuelRequirement)
+	fmt.Println("total:", totalFuelRequirement)
+	fmt.Println("module fuel:", moduleFuelRequirement)
 }
 
-func calculateFuelRequirement(mass int) int {
+func massToFuel(mass int) int {
 	return int((mass / 3) - 2)
+}
+
+func totalFuel(mass int) int {
+	total := massToFuel(mass)
+
+	for f := massToFuel(total); f > 0; f = massToFuel(f) {
+		total += f
+	}
+
+	return total
 }
 
 func readMassValuesFromFile(fp *string) []int {
